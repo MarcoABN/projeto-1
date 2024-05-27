@@ -1,7 +1,7 @@
 const SessaoPlenaria = require('../models/SessaoPlenaria');
 const Protocolo = require('../models/Protocolo');
 
-// Função para criar uma nova sessão plenária
+
 exports.criarSessaoPlenaria = async (req, res) => {
   const { data, status } = req.body;
 
@@ -13,7 +13,7 @@ exports.criarSessaoPlenaria = async (req, res) => {
   }
 };
 
-// Função para listar todas as sessões plenárias
+
 exports.listarSessoesPlenarias = async (req, res) => {
   try {
     const sessoesPlenarias = await SessaoPlenaria.findAll();
@@ -23,7 +23,7 @@ exports.listarSessoesPlenarias = async (req, res) => {
   }
 };
 
-// Função para buscar todos os protocolos associados a uma sessão plenária específica
+
 exports.buscarProtocolosPorSessaoPlenaria = async (req, res) => {
   const { id } = req.params;
 

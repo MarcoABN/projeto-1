@@ -1,19 +1,17 @@
 const express = require('express');
-const routes = require('./routes/routes');
-const sequelize = require('./config/db.config'); // Importe o objeto Sequelize
+const cors = require('cors');
+const routes = require('./routes/routes'); // Ajuste o caminho conforme necessário
 
 const app = express();
 
+// Middleware para permitir todas as origens
+app.use(cors()); // Permite todas as origens
+
+// Outros middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Rotas
-app.use('/api', routes);
-
-// Sincronize o modelo com o banco de dados
-sequelize.sync().then(() => {
-    console.log('Modelos sincronizados com o banco de dados.');
-}).catch(err => {
-    console.error('Erro ao sincronizar modelos com o banco de dados:', err);
-});
+// Usando o router para definir as rotas
+app.use('/api', routes); // Prefixo '/api' para todas as rotas
 
 module.exports = app;

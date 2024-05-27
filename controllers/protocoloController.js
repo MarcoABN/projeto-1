@@ -1,12 +1,11 @@
 const fs = require('fs');
 const path = require('path');
-
 const Protocolo = require('../models/Protocolo');
 
 // Função para criar um novo protocolo com arquivo PDF
 exports.criarProtocolo = async (req, res) => {
   const { numero, assunto, conteudo, dataCriacao } = req.body;
-  const { pdf } = req.files; // Assumindo que o arquivo PDF é enviado como parte do corpo da requisição
+  const pdf = req.files?.pdf; // Assumindo que o arquivo PDF é enviado como parte do corpo da requisição
 
   try {
     // Verifique se um arquivo PDF foi enviado
@@ -53,49 +52,68 @@ exports.listarProtocolos = async (req, res) => {
   }
 };
 
-  exports.obterProtocoloPorId = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const protocolo = await Protocolo.findByPk(id);
-      if (!protocolo) {
-        res.status(404).json({ erro: 'Protocolo não encontrado' });
-      } else {
-        res.status(200).json(protocolo);
-      }
-    } catch (error) {
-      res.status(500).json({ erro: error.message });
+exports.obterProtocoloPorId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const protocolo = await Protocolo.findByPk(id);
+    if (!protocolo) {
+      res.status(404).json({ erro: 'Protocolo não encontrado' });
+    } else {
+      res.status(200).json(protocolo);
     }
-  };
-  
-  // Função para atualizar um protocolo pelo ID
-  exports.atualizarProtocolo = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const [rowsUpdated] = await Protocolo.update(req.body, {
-        where: { id },
-      });
-      if (rowsUpdated === 0) {
-        res.status(404).json({ erro: 'Protocolo não encontrado' });
-      } else {
-        const protocoloAtualizado = await Protocolo.findByPk(id);
-        res.status(200).json(protocoloAtualizado);
-      }
-    } catch (error) {
-      res.status(500).json({ erro: error.message });
+  } catch (error) {
+    res.status(500).json({ erro: error.message });
+  }
+};
+
+// Função para atualizar um protocolo pelo ID
+exports.atualizarProtocolo = async (req, res) => {
+  const { id } = req.params;
+  const pdf = req.files?.pdf; // Assumindo que o arquivo PDF pode ser enviado na atualização
+
+  try {
+    let updateData = { ...req.body };
+
+    // Se um novo arquivo PDF for enviado, atualize o caminho do arquivo
+    if (pdf) {
+      const pdfName = `${Date.now()}_${pdf.name}`;
+      const pdfPath = path.join(__dirname, '..', 'uploads', pdfName);
+      await pdf.mv(pdfPath);
+      updateData.pdfPath = pdfPath;
     }
-  };
-  
-  // Função para excluir um protocolo pelo ID
-  exports.excluirProtocolo = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const protocoloExcluido = await Protocolo.destroy({ where: { id } });
-      if (protocoloExcluido === 0) {
-        res.status(404).json({ erro: 'Protocolo não encontrado' });
-      } else {
-        res.status(204).end();
-      }
-    } catch (error) {
-      res.status(500).json({ erro: error.message });
+
+    const [rowsUpdated] = await Protocolo.update(updateData, {
+      where: { id },
+    });
+
+    if (rowsUpdated === 0) {
+      res.status(404).json({ erro: 'Protocolo não encontrado' });
+    } else {
+      const protocoloAtualizado = await Protocolo.findByPk(id);
+      res.status(200).json(protocoloAtualizado);
     }
-  };
+  } catch (error) {
+    res.status(500).json({ erro: error.message });
+  }
+};
+
+// Função para excluir um protocolo pelo ID
+exports.excluirProtocolo = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const protocolo = await Protocolo.findByPk(id);
+    if (!protocolo) {
+      return res.status(404).json({ erro: 'Protocolo não encontrado' });
+    }
+
+    // Excluir o arquivo PDF associado
+    if (protocolo.pdfPath) {
+      fs.unlinkSync(protocolo.pdfPath);
+    }
+
+    await Protocolo.destroy({ where: { id } });
+    res.status(204).end();
+  } catch (error) {
+    res.status(500).json({ erro: error.message });
+  }
+};

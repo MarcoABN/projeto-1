@@ -19,12 +19,15 @@ const Protocolo = sequelize.define('Protocolo', {
     type: DataTypes.DATE,
     allowNull: false
   },
-  // Adicione colunas para informações de votação
   statusVotacao: {
     type: DataTypes.ENUM('pendente', 'aprovado', 'reprovado', 'nao votado'),
     allowNull: false,
     defaultValue: 'nao votado'
   },
+  pdfPath: {
+    type: DataTypes.STRING, // Adicione esta linha
+    allowNull: false
+  }
 });
 
 module.exports = Protocolo;

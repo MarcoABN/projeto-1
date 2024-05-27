@@ -9,7 +9,7 @@ router.post('/usuarios', usuarioController.registrarUsuario);
 router.get('/usuarios', usuarioController.listarUsuarios);
 router.get('/usuarios/:id', usuarioController.obterUsuarioPorId);
 router.put('/usuarios/:id', usuarioController.atualizarUsuario);
-router.delete('/usuarios/:id', usuarioController.excluirUsuario); 
+router.delete('/usuarios/:id', usuarioController.excluirUsuario);
 router.post('/login', usuarioController.loginUsuario);
 
 // Rotas para sessões plenárias
