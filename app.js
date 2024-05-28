@@ -1,6 +1,9 @@
+require('dotenv').config(); // Certifique-se de que isso está no início do arquivo
+
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes/routes'); // Ajuste o caminho conforme necessário
+const sequelize = require('./config/db.config');
 
 const app = express();
 
