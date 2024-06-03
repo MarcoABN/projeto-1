@@ -4,6 +4,7 @@ const usuarioController = require('../controllers/usuarioController');
 const sessaoPlenariaController = require('../controllers/sessaoPlenariaController');
 const protocoloController = require('../controllers/protocoloController');
 
+
 // Rotas para usuários
 router.post('/usuarios', usuarioController.registrarUsuario);
 router.get('/usuarios', usuarioController.listarUsuarios);
@@ -23,5 +24,9 @@ router.get('/protocolos', protocoloController.listarProtocolos);
 router.get('/protocolos/:id', protocoloController.obterProtocoloPorId);
 router.put('/protocolos/:id', protocoloController.atualizarProtocolo);
 router.delete('/protocolos/:id', protocoloController.excluirProtocolo);
+
+//router.post('/protocolos', upload.single('pdf'), protocoloController.criarProtocolo);
+
+
 
 module.exports = router;
