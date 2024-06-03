@@ -26,9 +26,8 @@ const Protocolo = sequelize.define('Protocolo', {
     defaultValue: DataTypes.NOW // Define o valor padrão como a data/hora atual
   },
   statusVotacao: {
-    type: DataTypes.ENUM('pendente', 'aprovado', 'reprovado', 'nao votado'),
-    allowNull: false,
-    defaultValue: 'nao votado'
+    type: DataTypes.STRING,
+    allowNull: false
   },
   pdfPath: {
     type: DataTypes.STRING,

@@ -31,7 +31,7 @@ exports.criarProtocolo = async (req, res) => {
       numero,
       assunto,
       conteudo,
-      statusVotacao: 'nao votado',
+      statusVotacao,
       dataCriacao: dataCriacao || new Date(), // Usa a data atual se dataCriacao não for fornecida
       pdfPath: pdfName, // Salva o caminho do arquivo no banco de dados
       
@@ -57,7 +57,7 @@ exports.listarProtocolos = async (req, res) => {
         conteudo: protocolo.conteudo,
         dataCriacao: protocolo.dataCriacao,
         statusVotacao: protocolo.statusVotacao,
-        pdfPath: protocolo.pdfPath// Inclui o caminho do arquivo PDF
+        pdfPath: protocolo.pdfPath
       };
     });
     res.status(200).json(protocolosComPDF);
